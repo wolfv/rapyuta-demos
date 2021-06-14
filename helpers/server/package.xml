@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>superserver</name>
+  <version>0.1.0</version>
+  <description>A server for all of rosbridge.</description>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/rosbridge_server</url>
+  <url type="bugtracker">https://github.com/RobotWebTools/rosbridge_suite/issues</url>
+  <url type="repository">https://github.com/RobotWebTools/rosbridge_suite</url>
+
+  <author email="wolf.vollprecht@quantstack.net">Wolf Vollprecht</author>
+  <maintainer email="wolf.vollprecht@quantstack.net">Wolf Vollprecht</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>rosbridge_server</exec_depend>
+</package>

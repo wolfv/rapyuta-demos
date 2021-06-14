@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+
+import os
+import tornado.web
+from superserver.server import setup_handlers, MainHandler
+
+if __name__ == "__main__":
+    base_url = os.getenv("ROBOSTACK_NET_ENDPOINT", "localhost")
+    application = tornado.web.Application([(r'/main', MainHandler)])
+    setup_handlers(application, base_url=base_url, url_path="ros")
+    application.listen(5555)
+    tornado.ioloop.IOLoop.current().start()

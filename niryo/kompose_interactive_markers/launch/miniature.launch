@@ -1,0 +1,7 @@
+<launch>
+  <!-- <arg name="interactive_marker_group" value="" /> -->
+  <include file="$(find kompose_interactive_markers)/launch/kompose.launch">
+    <arg name="joint_group" value="$(arg interactive_marker_group)" />
+    <arg name="kinematics_file" value="/tmp/kompose_config/config/kinematics.yaml" />
+  </include>
+</launch>

@@ -1,0 +1,25 @@
+joint_state: 
+  header: 
+    seq: 0
+    stamp: 
+      secs: 0
+      nsecs:         0
+    frame_id: "world"
+  name: [shoulder_pan_joint, shoulder_lift_joint, elbow_joint, wrist_1_joint, wrist_2_joint,
+  wrist_3_joint]
+  position: [-0.1062427719294585, -3.138954639097275, 0.268357366076755, -0.27116763814545686, 0.10598328943313913, -3.141423148366765]
+  velocity: []
+  effort: []
+multi_dof_joint_state: 
+  header: 
+    seq: 0
+    stamp: 
+      secs: 0
+      nsecs:         0
+    frame_id: "world"
+  joint_names: []
+  transforms: []
+  twist: []
+  wrench: []
+attached_collision_objects: []
+is_diff: False

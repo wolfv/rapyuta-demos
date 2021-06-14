@@ -1,0 +1,9 @@
+<launch>
+  <arg name="joint_group" doc="Name of joint group where interactive markers should be attached." default="ur3"/>
+  <arg name="kinematics_file" doc="Name of joint group where interactive markers should be attached." default=""/>
+
+  <node name="imk" pkg="kompose_interactive_markers" type="imk" output="screen">
+  	<param name="joint_group" value="$(arg joint_group)" />
+    <rosparam command="load" file="$(arg kinematics_file)"/>
+  </node>
+</launch>
