@@ -35,6 +35,6 @@ COPY ./niryo/fake_with_web.launch /launchfiles/fake_with_web.launch
 COPY ./niryo/start.sh /
 RUN sudo chmod a+x /start.sh
 
-RUN python3 -m pip install jupyterlab-zethus --upgrade
+RUN sudo python3 -m pip install jupyterlab-zethus jupyterlab-webviz --upgrade
 
 CMD ["/bin/bash", "-c", "/start.sh && unset PYTHONPATH && jupyter lab --no-browser --ip=0.0.0.0 --NotebookApp.token=''"]
