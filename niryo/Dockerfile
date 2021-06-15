@@ -1,4 +1,4 @@
-FROM base_ros_docker:latest
+FROM wolfv/base_ros_docker:latest_auto
 # FROM ros:melodic-ros-base
 
 RUN rosdep update
