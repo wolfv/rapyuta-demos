@@ -1,4 +1,4 @@
-FROM wolfv/base_ros_docker:latest_auto
+FROM wolfv/base_ros_docker:latest
 # FROM ros:melodic-ros-base
 
 RUN rosdep update
@@ -32,9 +32,8 @@ RUN bash -c "source devel/setup.bash \
 
 COPY ./niryo/fake_with_web.launch /launchfiles/fake_with_web.launch
 
-COPY ./niryo/start.sh /
-RUN sudo chmod a+x /start.sh
-
 RUN sudo python3 -m pip install jupyterlab-zethus jupyterlab-webviz --upgrade
 
+COPY ./niryo/start.sh /
+RUN sudo chmod a+x /start.sh
 CMD ["/bin/bash", "-c", "/start.sh && unset PYTHONPATH && jupyter lab --no-browser --ip=0.0.0.0 --NotebookApp.token=''"]

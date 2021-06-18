@@ -29,6 +29,8 @@ RUN adduser --disabled-password \
 	--uid ${NB_UID} \
 	${NB_USER} && usermod -aG sudo ${NB_USER}
 
+ENV HOME=/home/${NB_USER}
+
 EXPOSE 8888
 
 CMD ["jupyter", "lab", "--no-browser", "--ip=0.0.0.0", "--NotebookApp.token=''"]
@@ -147,7 +149,7 @@ RUN apt-get update && apt-get install -yq  --no-install-recommends \
 RUN rosdep init && rosdep update
 
 RUN mkdir -p /home/${NB_USER}/.ros
-RUN chown -R rapyuta:rapyuta /home/${NB_USER}
+RUN chown -R ${NB_USER}:${NB_USER} /home/${NB_USER}
 
 ################################### CUSTOM #####################################
 
