@@ -10,17 +10,17 @@ RUN cd src && git clone https://github.com/wolfv/niryo_one_ros
 # RUN rosdep install --from-paths src --ignore-src -r -y
 
 RUN sudo apt-get update && \
-	sudo apt-get install -y python-pip \
-					   python-jsonpickle \
-					   ros-${ROS_DISTRO}-moveit \
-					   ros-${ROS_DISTRO}-robot-state-publisher \
-					   ros-${ROS_DISTRO}-rosbridge-suite \
-					   ros-${ROS_DISTRO}-joy ros-${ROS_DISTRO}-ros-control \
-					   ros-${ROS_DISTRO}-ros-controllers \
-					   ros-${ROS_DISTRO}-tf2-web-republisher \
-					   ros-${ROS_DISTRO}-joint-state-publisher \
-			    && apt-get clean                               \
-				&& rm -rf /var/lib/apt/lists/*
+    sudo apt-get install -y python-pip \
+                       python-jsonpickle \
+                       ros-${ROS_DISTRO}-moveit \
+                       ros-${ROS_DISTRO}-robot-state-publisher \
+                       ros-${ROS_DISTRO}-rosbridge-suite \
+                       ros-${ROS_DISTRO}-joy ros-${ROS_DISTRO}-ros-control \
+                       ros-${ROS_DISTRO}-ros-controllers \
+                       ros-${ROS_DISTRO}-tf2-web-republisher \
+                       ros-${ROS_DISTRO}-joint-state-publisher \
+                && sudo apt-get clean                               \
+                && sudo rm -rf /var/lib/apt/lists/*
 
 ADD ./niryo/kompose_interactive_markers ./src/kompose_interactive_markers
 ADD ./helpers/server ./src/superserver
