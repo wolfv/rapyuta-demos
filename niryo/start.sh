@@ -8,17 +8,18 @@ ROSBRIDGE_WEBSOCKET_ENDPOINT_PORT="${ROSBRIDGE_WEBSOCKET_ENDPOINT_PORT:-5555}"
 WS_EP="ws://${ROSBRIDGE_WEBSOCKET_ENDPOINT_HOST}:${ROSBRIDGE_WEBSOCKET_ENDPOINT_PORT}/ros/bridge"
 
 VNC_HOST="${VNC_HOST:-localhost}"
-VNC_HOST="${VNC_PORT:-6901}"
+VNC_PORT="${VNC_PORT:-6901}"
 
 mkdir -p ~/.jupyter/lab/user-settings/jupyterlab-webviz/
 mkdir -p ~/.jupyter/lab/user-settings/jupyterlab-zethus/
 mkdir -p ~/.jupyter/lab/user-settings/jupyterlab-novnc/
 
-echo '{"defaultROSEndpoint": "${WS_EP}"}' > \
+printf '{"defaultROSEndpoint": "%s"}' "${WS_EP}" > \
 	~/.jupyter/lab/user-settings/jupyterlab-webviz/plugin.jupyterlab-settings;
-echo '{"defaultROSEndpoint": "${WS_EP}"}' > \
+
+printf '{"defaultROSEndpoint": "%s"}' "${WS_EP}" > \
 	~/.jupyter/lab/user-settings/jupyterlab-zethus/settings.jupyterlab-settings;
-echo '{"configured_endpoints": [{"name": "Default", "autoconnect": true,"reconnect": true,"reconnect_delay": 1000, "host": "${VNC_HOST}","port": ${VNC_PORT}, "logging": "info","resize": "scale"}]}' > \
+printf '{"configured_endpoints": [{"name": "Default", "autoconnect": true,"reconnect": true,"reconnect_delay": 1000, "host": "%s","port": "%s", "logging": "info","resize": "scale"}]}' "${VNC_HOST}" "${VNC_PORT}" > \
 	~/.jupyter/lab/user-settings/jupyterlab-novnc/jupyterlab-novnc-settings.jupyterlab-settings;
 
 source ~/catkin_ws/devel/setup.bash
