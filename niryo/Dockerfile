@@ -1,5 +1,4 @@
 FROM wolfv/base_ros_docker:latest
-# FROM ros:melodic-ros-base
 
 RUN rosdep update
 
@@ -12,28 +11,26 @@ RUN cd src && git clone https://github.com/wolfv/niryo_one_ros
 
 RUN sudo apt-get update && \
 	sudo apt-get install -y python-pip \
+					   python-jsonpickle \
 					   ros-${ROS_DISTRO}-moveit \
 					   ros-${ROS_DISTRO}-robot-state-publisher \
 					   ros-${ROS_DISTRO}-rosbridge-suite \
 					   ros-${ROS_DISTRO}-joy ros-${ROS_DISTRO}-ros-control \
 					   ros-${ROS_DISTRO}-ros-controllers \
 					   ros-${ROS_DISTRO}-tf2-web-republisher \
-					   ros-${ROS_DISTRO}-joint-state-publisher
-
-RUN bash -c "source /opt/ros/melodic/setup.bash && catkin build"
-
-RUN sudo apt-get install python-jsonpickle
+					   ros-${ROS_DISTRO}-joint-state-publisher \
+			    && apt-get clean                               \
+				&& rm -rf /var/lib/apt/lists/*
 
 ADD ./niryo/kompose_interactive_markers ./src/kompose_interactive_markers
 ADD ./helpers/server ./src/superserver
 
-RUN bash -c "source devel/setup.bash \
-       		 && catkin build"
-
-COPY ./niryo/fake_with_web.launch /launchfiles/fake_with_web.launch
+RUN bash -c "source /opt/ros/melodic/setup.bash && catkin build"
 
 RUN sudo python3 -m pip install jupyterlab-zethus jupyterlab-webviz --upgrade
 
+COPY ./niryo/fake_with_web.launch /launchfiles/fake_with_web.launch
 COPY ./niryo/start.sh /
 RUN sudo chmod a+x /start.sh
+
 CMD ["/bin/bash", "-c", "/start.sh && unset PYTHONPATH && jupyter lab --no-browser --ip=0.0.0.0 --NotebookApp.token=''"]
