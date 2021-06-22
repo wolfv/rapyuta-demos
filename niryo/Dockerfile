@@ -30,7 +30,8 @@ RUN bash -c "source /opt/ros/melodic/setup.bash && catkin build"
 RUN sudo python3 -m pip install jupyterlab-zethus jupyterlab-webviz --upgrade
 
 COPY ./niryo/fake_with_web.launch /launchfiles/fake_with_web.launch
-COPY ./niryo/start.sh /
-RUN sudo chmod a+x /start.sh
+COPY ./niryo/real_with_web.launch /launchfiles/real_with_web.launch
+COPY ./niryo/start.sh /launchfiles/
+RUN sudo chmod a+x /launchfiles/start.sh
 
-CMD ["/bin/bash", "-c", "/start.sh && unset PYTHONPATH && jupyter lab --no-browser --ip=0.0.0.0 --NotebookApp.token=''"]
+CMD ["/bin/bash", "-c", "/launchfiles/start.sh FAKE"]

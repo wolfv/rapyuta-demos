@@ -29,5 +29,14 @@ printf '{"configured_endpoints": [{"name": "Default", "autoconnect": true,"recon
 
 source ~/catkin_ws/devel/setup.bash
 
-roscore &
-roslaunch --wait /launchfiles/fake_with_web.launch &
+ARG1="${1:-FAKE}"
+
+if [[ $ARG1 == "FAKE" ]]; then
+	roscore &
+	roslaunch --wait /launchfiles/fake_with_web.launch &
+else
+	roscore &
+	roslaunch --wait /launchfiles/real_with_web.launch &
+fi
+
+PYTHONPATH="" jupyter lab --no-browser --ip=0.0.0.0 --NotebookApp.token=''
