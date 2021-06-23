@@ -33,6 +33,10 @@ RUN sudo python3 -m pip install jupyterlab-zethus jupyterlab-webviz --upgrade
 COPY ./niryo/fake_with_web.launch /launchfiles/fake_with_web.launch
 COPY ./niryo/real_with_web.launch /launchfiles/real_with_web.launch
 COPY ./niryo/start.sh /launchfiles/
+COPY ./helpers/kernel_generator.py ./kernel_generator.py
+
+RUN python3 kernel_generator.py python2 ./devel/setup.bash
+
 RUN sudo chmod a+x /launchfiles/start.sh
 
 CMD ["/bin/bash", "-c", "/launchfiles/start.sh FAKE"]
