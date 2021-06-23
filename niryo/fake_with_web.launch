@@ -24,7 +24,7 @@
     <include file="$(find niryo_one_bringup)/launch/user_interface.launch">
         <arg name="simulation_mode" value="true" />
     </include>
- 
+
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find niryo_one_description)/config/default_config.rviz" />
 
 	<!-- <include file="$(find niryo_one_bringup)/launch/desktop_rviz_simulation.launch" /> -->
