@@ -40,5 +40,17 @@
 
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find niryo_one_description)/config/default_config.rviz" />
 
+    <param name="/niryo_one/python_api/service_timeout" value="10" />
+    <param name="/niryo_one/python_api/action_connection_timeout" value="10" />
+    <param name="/niryo_one/python_api/action_execute_timeout" value="10" />
+    <param name="/niryo_one/python_api/action_preempt_timeout" value="10" />
+    <rosparam file="$(find niryo_one_tools)/config/end_effectors.yaml" ns="niryo_one_tools" />
+
+    <node name="web_video_server" pkg="web_video_server" type="web_video_server">
+        <param name="port" value="5151" />
+        <param name="address" value="0.0.0.0" />
+        <!-- <param name="server_threads" value="2" /> -->
+        <!-- <param name="ros_threads" value="2" /> -->
+    </node>
     <!-- <include file="$(find niryo_one_bringup)/launch/desktop_rviz_simulation.launch" /> -->
 </launch>

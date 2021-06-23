@@ -19,7 +19,8 @@ RUN sudo apt-get update && \
                        ros-${ROS_DISTRO}-ros-controllers \
                        ros-${ROS_DISTRO}-tf2-web-republisher \
                        ros-${ROS_DISTRO}-joint-state-publisher \
-                && sudo apt-get clean                               \
+                       ros-${ROS_DISTRO}-web-video-server \
+                && sudo apt-get clean \
                 && sudo rm -rf /var/lib/apt/lists/*
 
 ADD ./niryo/kompose_interactive_markers ./src/kompose_interactive_markers
