@@ -28,7 +28,7 @@ ADD ./helpers/server ./src/superserver
 
 RUN bash -c "source /opt/ros/melodic/setup.bash && catkin build"
 
-RUN sudo python3 -m pip install jupyterlab-zethus jupyterlab-webviz --upgrade
+RUN sudo python3 -m pip install jupyterlab-zethus jupyterlab-webviz jupyterlab-jitsi --upgrade
 
 COPY ./niryo/fake_with_web.launch /launchfiles/fake_with_web.launch
 COPY ./niryo/real_with_web.launch /launchfiles/real_with_web.launch
