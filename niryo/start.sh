@@ -20,6 +20,7 @@ VNC_EXTERNAL_PORT="${VNC_EXTERNAL_PORT:-6901}"
 mkdir -p ~/.jupyter/lab/user-settings/jupyterlab-webviz/
 mkdir -p ~/.jupyter/lab/user-settings/jupyterlab-zethus/
 mkdir -p ~/.jupyter/lab/user-settings/jupyterlab-novnc/
+mkdir -p ~/.jupyter/lab/user-settings/jupyterlab-jitsi/
 
 printf '{"defaultROSEndpoint": "%s"}' "${WS_EP}" > \
 	~/.jupyter/lab/user-settings/jupyterlab-webviz/plugin.jupyterlab-settings;
@@ -29,6 +30,33 @@ printf '{"defaultROSEndpoint": "%s", "defaultROSPKGSEndpoint": "%s"}' "${WS_EP}"
 
 printf '{"configured_endpoints": [{"name": "Default", "autoconnect": true,"reconnect": true,"reconnect_delay": 1000, "host": "%s","port": "%s", "logging": "info","resize": "scale"}]}' "${VNC_EXTERNAL_HOST}" "${VNC_EXTERNAL_PORT}" > \
 	~/.jupyter/lab/user-settings/jupyterlab-novnc/jupyterlab-novnc-settings.jupyterlab-settings;
+
+cat > ~/.jupyter/lab/user-settings/jupyterlab-jitsi/plugin.jupyterlab-settings << EOM
+{
+  "configured_rooms": [{
+    "domain": "meet.jit.si",
+    "options": {
+      "roomName": "thisisarapyutarobot",
+      "configOverwrite": {
+        "enableWelcomePage": false,
+        "disableShortcuts": true,
+        "disableInitialGUM": true,
+        "enableClosePage": false,
+        "disableProfile": true,
+        "prejoinPageEnabled": false,
+        "startWithAudioMuted": true,
+        "toolbarButtons": [],
+        "disableJoinLeaveSounds": true,
+        "disableInviteFunctions": true
+      },
+      "interfaceConfigOverwrite": {
+        "MOBILE_APP_PROMO": false,
+        "SHOW_CHROME_EXTENSION_BANNER": false
+      }
+    }
+  }]
+}
+EOM
 
 source ~/catkin_ws/devel/setup.bash
 
