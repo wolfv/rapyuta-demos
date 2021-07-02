@@ -2,7 +2,7 @@
 
 import os
 import tornado.web
-from superserver.server import setup_handlers, MainHandler
+from cloudserver.server import setup_handlers, MainHandler
 
 if __name__ == "__main__":
     base_url = os.getenv("ROBOSTACK_NET_ENDPOINT", "localhost")

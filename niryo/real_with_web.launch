@@ -1,5 +1,5 @@
 <launch>
-    <include file="$(find superserver)/launch/superserver.launch">
+    <include file="$(find cloudserver)/launch/cloudserver.launch">
         <arg name="websocket_external_port" value="80" />
     </include>
     <node pkg="tf2_web_republisher" type="tf2_web_republisher" name="tf2_web_republisher" />

@@ -19,9 +19,7 @@ RUN apt-get update && apt-get -yq dist-upgrade  \
  && apt-get clean                               \
  && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install --upgrade pip setuptools                 \
- && python3 -m pip install jupyterlab bash_kernel \
-                           jupyterlab-novnc jupyterlab-zethus \
+RUN pip3 install wheel jupyterlab bash_kernel \
  && python3 -m bash_kernel.install
 
 RUN adduser --disabled-password \
@@ -39,8 +37,6 @@ CMD ["jupyter", "lab", "--no-browser", "--ip=0.0.0.0", "--NotebookApp.token=''"]
 ## Add all install scripts for further steps
 
 ## Envrionment config
-
-RUN printenv
 
 ENV DISPLAY=:1 \
     VNC_PORT=5901 \
@@ -79,6 +75,7 @@ RUN apt-get update \
     gnome-icon-theme \
     locales-all locales \
     tango-icon-theme \
+    libnss-wrapper gettext # "Install nss-wrapper to be able to execute image as non-root user"\
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
@@ -89,14 +86,8 @@ RUN ${INST_SCRIPTS}/no_vnc.sh
 
 ADD ./base_docker/src/common/xfce/ /home/${NB_USER}/
 
-## configure startup
-RUN echo "Install nss-wrapper to be able to execute image as non-root user" && \
-    apt-get update && apt-get install -yq --no-install-recommends libnss-wrapper gettext \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/*
-
 # have to be added to hold all env vars correctly
-RUN echo "add 'souce generate_container_user' to .bashrc" && \
+RUN echo "add 'source generate_container_user' to .bashrc" && \
     echo 'source $STARTUPDIR/generate_container_user' >> /home/${NB_USER}/.bashrc
 
 ADD ./base_docker/src/common/scripts $STARTUPDIR
@@ -131,6 +122,8 @@ RUN apt-get update && apt-get install -yq  --no-install-recommends \
     python-vcstools \
     python-catkin-tools \
     ros-${ROS_DISTRO}-ros-base \
+    ros-${ROS_DISTRO}-rosbridge-suite \
+    ros-${ROS_DISTRO}-tf2-web-republisher \
     git \
     python-pip \
     python-dev \
@@ -145,16 +138,18 @@ RUN apt-get update && apt-get install -yq  --no-install-recommends \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-# bootstrap rosdep
-RUN rosdep init && rosdep update
-
-RUN mkdir -p /home/${NB_USER}/.ros
-RUN chown -R ${NB_USER}:${NB_USER} /home/${NB_USER}
+# bootstrap ros & rosdep
+RUN rosdep init && rosdep update && mkdir -p /home/${NB_USER}/.ros
 
 ################################### CUSTOM #####################################
 
 RUN python2 -m pip install wheel ipykernel rospkg
 RUN python2 -m ipykernel install --user
+
+COPY ./helpers/kernel_generator.py ./kernel_generator.py
+RUN python3 kernel_generator.py python2 ./devel/setup.bash
+
+RUN sudo python3 -m pip install jupyterlab-zethus jupyterlab-webviz jupyterlab-jitsi jupyterlab-novnc --upgrade
 
 ADD ./base_docker/nginx.conf /etc/nginx/nginx.conf
 ADD ./base_docker/site.conf /etc/nginx/conf.d/default.conf
@@ -163,6 +158,7 @@ RUN chmod -R g+w /var/log/nginx
 ADD ./base_docker/html /usr/share/nginx/html
 
 ##################################### TAIL #####################################
+
 # setup entrypoint
 RUN mkdir -p /home/${NB_USER}/js_templates
 COPY --chown=1000:1000 ./base_docker/html/env.template.js /home/${NB_USER}/js_templates/env.template.js
@@ -173,22 +169,17 @@ RUN chmod a+x /ros_entrypoint.sh
 ENTRYPOINT ["/ros_entrypoint.sh"]
 
 RUN chown ${NB_UID} /home/${NB_USER}/js_templates
-RUN chown -R ${NB_USER} /home/${NB_USER}
+RUN chown -R ${NB_USER}:${NB_USER} /home/${NB_USER}
 RUN echo "root:toor" | chpasswd
 RUN echo "${NB_USER}:robotics" | chpasswd
 
-
 COPY ./base_docker/start.sh /
-COPY ./base_docker/run-turtle.sh /home/${NB_USER}/catkin_ws/
 RUN chmod a+x /start.sh
-RUN chmod a+x /home/${NB_USER}/catkin_ws/run-turtle.sh
 
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> \
-/etc/sudoers
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER ${NB_USER}
 ENV WS_ENV_PORT=9090
-RUN echo "export TURTLEBOT3_MODEL=burger" >> ~/.bashrc
 RUN echo "export PYTHONPATH=$PYTHONPATH:/usr/lib/python2.7/dist-packages" >> ~/.bashrc
 RUN echo "source ~/catkin_ws/devel/setup.bash" >> /home/${NB_USER}/.bashrc
 
@@ -199,19 +190,3 @@ EXPOSE 9090
 
 WORKDIR /home/${NB_USER}/catkin_ws
 CMD ["bash", "-c", "/start.sh && ./run-turtle.sh  &&  jupyter lab --no-browser --ip=0.0.0.0 --NotebookApp.token=''"]
-
-# RUN mkdir -p /home/rapyuta/.ros
-# RUN chown rapyuta.rapyuta /home/rapyuta/.ros
-# 
-# RUN mkdir -p ${HOME}/catkin_ws/src && cd ${HOME}/catkin_ws/src && git clone https://github.com/rapyuta-robotics/io_tutorials.git
-# 
-# RUN  cd ${HOME}/catkin_ws \
-#  && apt-get update \
-#  && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && rosdep update && rosdep install --as-root apt:false --from-paths src --ignore-src -r -y" \
-#  && apt-get install -yq --no-install-recommends \
-#  && apt-get clean \
-#  && rm -rf /var/lib/apt/lists/* \
-#  && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin build"
-
-# WORKDIR  ${HOME}/catkin_ws/src/io_tutorials/io_turtlesim/io_turtlesim_webserver/ 
-# RUN cp ./env.sh /usr/bin/

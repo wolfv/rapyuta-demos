@@ -15,6 +15,8 @@ RUN bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash \
 RUN mkdir -p /launchfiles
 COPY fake_with_web.launch /launchfiles
 
-COPY helpers/server src/superserver
+RUN echo "export TURTLEBOT3_MODEL=burger" >> ~/.bashrc
+
+COPY helpers/cloudserver src/cloudserver
 RUN bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash \
        		 && catkin_make"

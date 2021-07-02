@@ -1,4 +1,4 @@
-FROM wolfv/base_ros_docker:latest
+FROM base_ros_docker
 
 RUN rosdep update
 
@@ -14,28 +14,22 @@ RUN sudo apt-get update && \
                        python-jsonpickle \
                        ros-${ROS_DISTRO}-moveit \
                        ros-${ROS_DISTRO}-robot-state-publisher \
-                       ros-${ROS_DISTRO}-rosbridge-suite \
-                       ros-${ROS_DISTRO}-joy ros-${ROS_DISTRO}-ros-control \
+                       ros-${ROS_DISTRO}-joy \
+                       ros-${ROS_DISTRO}-ros-control \
                        ros-${ROS_DISTRO}-ros-controllers \
-                       ros-${ROS_DISTRO}-tf2-web-republisher \
                        ros-${ROS_DISTRO}-joint-state-publisher \
                        ros-${ROS_DISTRO}-web-video-server \
                 && sudo apt-get clean \
                 && sudo rm -rf /var/lib/apt/lists/*
 
 ADD ./niryo/kompose_interactive_markers ./src/kompose_interactive_markers
-ADD ./helpers/server ./src/superserver
+ADD ./helpers/cloudserver ./src/cloudserver
 
 RUN bash -c "source /opt/ros/melodic/setup.bash && catkin build"
-
-RUN sudo python3 -m pip install jupyterlab-zethus jupyterlab-webviz jupyterlab-jitsi --upgrade
 
 COPY ./niryo/fake_with_web.launch /launchfiles/fake_with_web.launch
 COPY ./niryo/real_with_web.launch /launchfiles/real_with_web.launch
 COPY ./niryo/start.sh /launchfiles/
-COPY ./helpers/kernel_generator.py ./kernel_generator.py
-
-RUN python3 kernel_generator.py python2 ./devel/setup.bash
 
 RUN sudo chmod a+x /launchfiles/start.sh
 
