@@ -26,16 +26,17 @@ printf '{"defaultROSEndpoint": "%s"}' "${WS_EP}" > \
 	~/.jupyter/lab/user-settings/jupyterlab-webviz/plugin.jupyterlab-settings;
 
 printf '{"defaultROSEndpoint": "%s", "defaultROSPKGSEndpoint": "%s"}' "${WS_EP}" "${PKGS_EP}" > \
-	~/.jupyter/lab/user-settings/jupyterlab-zethus/settings.jupyterlab-settings;
+	~/.jupyter/lab/user-settings/jupyterlab-zethus/plugin.jupyterlab-settings;
 
 printf '{"configured_endpoints": [{"name": "Default", "autoconnect": true,"reconnect": true,"reconnect_delay": 1000, "host": "%s","port": "%s", "logging": "info","resize": "scale"}]}' "${VNC_EXTERNAL_HOST}" "${VNC_EXTERNAL_PORT}" > \
-	~/.jupyter/lab/user-settings/jupyterlab-novnc/jupyterlab-novnc-settings.jupyterlab-settings;
+	~/.jupyter/lab/user-settings/jupyterlab-novnc/plugin.jupyterlab-settings;
 
 cat > ~/.jupyter/lab/user-settings/jupyterlab-jitsi/plugin.jupyterlab-settings << EOM
 {
   "configured_rooms": [{
     "domain": "meet.jit.si",
     "options": {
+      "roomAlias": "Robot",
       "roomName": "thisisarapyutarobot",
       "configOverwrite": {
         "enableWelcomePage": false,
@@ -61,6 +62,8 @@ EOM
 source ~/catkin_ws/devel/setup.bash
 
 ARG1="${1:-FAKE}"
+
+cp /content/* ./
 
 if [[ $ARG1 == "FAKE" ]]; then
 	roscore &

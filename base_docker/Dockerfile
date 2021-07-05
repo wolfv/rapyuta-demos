@@ -143,11 +143,12 @@ RUN rosdep init && rosdep update && mkdir -p /home/${NB_USER}/.ros
 
 ################################### CUSTOM #####################################
 
-RUN python2 -m pip install wheel ipykernel rospkg
-RUN python2 -m ipykernel install --user
+RUN mkdir -p /home/${NB_USER}/catkin_ws/src && cd /home/${NB_USER}/catkin_ws/ && catkin build
+
+RUN python2 -m pip install wheel ipykernel rospkg && python2 -m ipykernel install --user
 
 COPY ./helpers/kernel_generator.py ./kernel_generator.py
-RUN python3 kernel_generator.py python2 ./devel/setup.bash
+RUN python3 kernel_generator.py python2 /home/${NB_USER}/devel/setup.bash
 
 RUN sudo python3 -m pip install jupyterlab-zethus jupyterlab-webviz jupyterlab-jitsi jupyterlab-novnc --upgrade
 

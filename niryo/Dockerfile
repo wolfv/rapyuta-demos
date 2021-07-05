@@ -1,4 +1,4 @@
-FROM base_ros_docker
+FROM wolfv/base_ros_docker:latest
 
 RUN rosdep update
 
@@ -30,7 +30,7 @@ RUN bash -c "source /opt/ros/melodic/setup.bash && catkin build"
 COPY ./niryo/fake_with_web.launch /launchfiles/fake_with_web.launch
 COPY ./niryo/real_with_web.launch /launchfiles/real_with_web.launch
 COPY ./niryo/start.sh /launchfiles/
-
+COPY ./niryo/content /content
 RUN sudo chmod a+x /launchfiles/start.sh
 
 CMD ["/bin/bash", "-c", "/launchfiles/start.sh FAKE"]
