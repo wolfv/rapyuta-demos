@@ -143,8 +143,7 @@ RUN rosdep init && rosdep update && mkdir -p /home/${NB_USER}/.ros
 
 ################################### CUSTOM #####################################
 
-RUN mkdir -p /home/${NB_USER}/catkin_ws/src && cd /home/${NB_USER}/catkin_ws/ && \
-    source /opt/ros/${ROS_DISTRO}/setup.bash && catkin build
+RUN bash -c "mkdir -p /home/${NB_USER}/catkin_ws/src && cd /home/${NB_USER}/catkin_ws/ && source /opt/ros/${ROS_DISTRO}/setup.bash && catkin build"
 
 RUN python2 -m pip install wheel ipykernel rospkg && python2 -m ipykernel install --user
 
