@@ -147,8 +147,7 @@ RUN bash -c "mkdir -p /home/${NB_USER}/catkin_ws/src && cd /home/${NB_USER}/catk
 
 RUN python2 -m pip install wheel ipykernel rospkg && python2 -m ipykernel install --user
 
-COPY ./helpers/kernel_generator.py ./kernel_generator.py
-RUN python3 kernel_generator.py python2 /home/${NB_USER}/devel/setup.bash
+COPY ./helpers/kernel_generator.py ${INST_SCRIPTS}/kernel_generator.py
 
 RUN sudo python3 -m pip install jupyterlab-zethus jupyterlab-webviz jupyterlab-jitsi jupyterlab-novnc --upgrade
 

@@ -3,6 +3,8 @@ sudo service nginx start
 
 export HOME=/home/${NB_USER}
 
+python3 /home/${NB_USER}/install/kernel_generator.py python2 /home/${NB_USER}/catkin_ws/devel/setup.bash
+
 ROSBRIDGE_WEBSOCKET_ENDPOINT_HOST="${ROSBRIDGE_WEBSOCKET_ENDPOINT_HOST:-localhost}"
 ROSBRIDGE_WEBSOCKET_ENDPOINT_PORT="${ROSBRIDGE_WEBSOCKET_ENDPOINT_PORT:-5555}"
 
