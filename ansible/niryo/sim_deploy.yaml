@@ -1,0 +1,89 @@
+- name: Niryo Simulation Builds
+  hosts: localhost
+  strategy: free
+  connection: local
+  tasks:
+    - copy:
+        src: niryo_sim_package.json
+        dest: /tmp/niryo_sim_package.json
+
+    - name: Docker Secret
+      async: 100
+      poll: 0
+      rapyutarobotics.rr_io.secrets:
+        name: dockerhub
+        present: "{{ present }}"
+        type: docker
+        username: ioamrreadonly
+        password: "{{ docker_password }}"
+        email: "{{ docker_email }}"
+
+    - name: JupyterLab Static Route
+      async: 100
+      poll: 0
+      rapyutarobotics.rr_io.networks:
+        name: "{{ jlab_static_route }}"
+        present: "{{ present }}"
+        type: static_route
+
+    - name: Network Deployment
+      async: 100
+      poll: 0
+      rapyutarobotics.rr_io.networks:
+        name: native_network
+        present: "{{ present }}"
+        type: native_network
+        ros_distro: melodic
+        resource_type: small
+
+    - name: Base image build
+      async: 100
+      poll: 0
+      rapyutarobotics.rr_io.builds:
+        name: base_docker_image
+        strategy_type: docker
+        present: "{{ present }}"
+        repository: git@github.com:wolfv/rapyuta-demos.git
+        context_directory: ""
+        branch: master
+        docker_file_path: base_docker/Dockerfile
+        source_secret: github
+        docker_pull_secret: dockerhub
+        docker_push_secret: dockerhub
+        docker_image_repository: docker.io/wolfv/base_ros_docker
+        trigger: false
+        trigger_name: latest
+        tag_name: latest
+
+    - name: Niryo Demo image build
+      async: 100
+      poll: 0
+      rapyutarobotics.rr_io.builds:
+        name: niryo_docker_image
+        strategy_type: docker
+        present: "{{ present }}"
+        repository: git@github.com:wolfv/rapyuta-demos.git
+        context_directory: ""
+        branch: master
+        docker_file_path: niryo/Dockerfile
+        source_secret: github
+        docker_pull_secret: dockerhub
+        docker_push_secret: dockerhub
+        docker_image_repository: docker.io/wolfv/niryo_demo
+        trigger: false
+        trigger_name: latest
+        tag_name: latest
+
+    - name: niryo sim package
+      async: 1250
+      poll: 0
+      rapyutarobotics.rr_io.packages:
+        name: niryo_sim_package
+        present: "{{ present }}"
+        type: 
+        version: auto
+        build: latest
+        docker_image: niryo_docker_image
+        secret: dockerhub
+        manifest_path: /tmp/niryo_sim_package.json
+      register: package_creation_out

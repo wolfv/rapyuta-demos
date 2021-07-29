@@ -1,0 +1,87 @@
+{
+    "name": "niryo_sim_package",
+    "packageVersion": "v1.0.4",
+    "description": "Niryo Web Backend for use with simulated robot",
+    "bindable": true,
+    "plans": [
+        {
+            "name": "default",
+            "metadata": {},
+            "singleton": false,
+            "components": [
+                {
+                    "name": "Docker",
+                    "description": "",
+                    "cloudInfra": {
+                        "replicas": 1,
+                        "endpoints": [
+                            {
+                                "name": "ROS_VIDEO_STREAM",
+                                "exposeExternally": true,
+                                "port": 443,
+                                "targetPort": 5151,
+                                "proto": "HTTPS"
+                            },
+                            {
+                                "name": "VNC_EXTERNAL",
+                                "exposeExternally": true,
+                                "port": 443,
+                                "targetPort": 6901,
+                                "proto": "HTTPS"
+                            },
+                            {
+                                "name": "jupyterlab",
+                                "exposeExternally": true,
+                                "port": 443,
+                                "targetPort": 8888,
+                                "proto": "HTTPS"
+                            },
+                            {
+                                "name": "ROSBRIDGE_WEBSOCKET_ENDPOINT",
+                                "exposeExternally": true,
+                                "port": 443,
+                                "targetPort": 5555,
+                                "proto": "HTTPS"
+                            }
+                        ]
+                    },
+                    "ros": {
+                        "topics": [],
+                        "services": [],
+                        "actions": [],
+                        "isROS": true,
+                        "ros_distro": "melodic"
+                    },
+                    "requiredRuntime": "cloud",
+                    "architecture": "amd64",
+                    "executables": [
+                        {
+                            "name": "docker",
+                            "simulationOptions": {
+                                "simulation": false
+                            },
+			                "docker": "wolfv/niryo_demo:latest",
+                            "cmd": [
+                                "/bin/bash",
+                                "-c",
+                                "/launchfiles/start.sh FAKE"
+                            ],
+                            "limits": {
+                                "cpu": 2,
+                                "memory": 8192
+                            }
+                        }
+                    ],
+                    "parameters": [],
+                    "rosBagJobDefs": []
+                }
+            ],
+            "includePackages": [],
+            "dependentDeployments": [],
+            "inboundROSInterfaces": {
+                "anyIncomingScopedOrTargetedRosConfig": false
+            },
+            "exposedParameters": []
+        }
+    ]
+}
