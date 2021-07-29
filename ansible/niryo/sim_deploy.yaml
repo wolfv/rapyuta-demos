@@ -74,7 +74,7 @@
         trigger_name: latest
         tag_name: latest
 
-    - name: niryo sim package
+    - name: Niryo Sim package
       async: 1250
       poll: 0
       rapyutarobotics.rr_io.packages:
@@ -87,3 +87,28 @@
         secret: dockerhub
         manifest_path: /tmp/niryo_sim_package.json
       register: package_creation_out
+
+    - name: Niryo Sim Deployment
+      async: 2000
+      poll: 0
+      rapyutarobotics.rr_io.deployments:
+        name: niryo_sim
+        component_name: niryo_sim_package
+        component_alias: niryo_sim_package
+        present: "{{ present }}"
+        package_name: niryo_sim_package
+        networks:
+          static_routes:
+            - name: "{{ jlab_static_route }}"
+              endpoint_name: jupyterlab
+          # is this a routed network?!
+          native_networks:
+            - name: native_network
+        # component_params:
+        #   VNC_PASSWORD: rapyuta
+        #   VNC_RESOLUTION: 1920x1080
+        #   DEBUG: true
+        #   RACK: true
+        #   WORLD: tatsumi
+        #   ITEM_SPAWN_FROM: AUTO
+        #   GWM_AUTH_TOKEN: autobootstrap
