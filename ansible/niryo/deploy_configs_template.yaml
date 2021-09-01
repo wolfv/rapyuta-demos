@@ -1,0 +1,5 @@
+present: "true"
+docker_password: "xxx-xxx-xxx"
+docker_email: "my_docker@email.com"
+jlab_static_route: jlabstaticroute
+

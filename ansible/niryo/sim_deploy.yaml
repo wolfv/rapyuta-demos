@@ -14,7 +14,7 @@
         name: dockerhub
         present: "{{ present }}"
         type: docker
-        username: ioamrreadonly
+        username: "{{ docker_username }}"
         password: "{{ docker_password }}"
         email: "{{ docker_email }}"
 
@@ -23,6 +23,7 @@
       poll: 0
       rapyutarobotics.rr_io.networks:
         name: "{{ jlab_static_route }}"
+        ros_distro: melodic
         present: "{{ present }}"
         type: static_route
 
@@ -37,78 +38,72 @@
         resource_type: small
 
     - name: Base image build
-      async: 100
+      # async: 100
       poll: 0
       rapyutarobotics.rr_io.builds:
         name: base_docker_image
         strategy_type: docker
         present: "{{ present }}"
-        repository: git@github.com:wolfv/rapyuta-demos.git
+        repository: https://github.com/wolfv/rapyuta-demos
         context_directory: ""
         branch: master
         docker_file_path: base_docker/Dockerfile
         source_secret: github
         docker_pull_secret: dockerhub
         docker_push_secret: dockerhub
-        docker_image_repository: docker.io/wolfv/base_ros_docker
+        docker_image_repository: docker.io/{{ docker_username }}/base_ros_docker
         trigger: false
         trigger_name: latest
         tag_name: latest
 
     - name: Niryo Demo image build
-      async: 100
+      # async: 100
       poll: 0
       rapyutarobotics.rr_io.builds:
         name: niryo_docker_image
         strategy_type: docker
         present: "{{ present }}"
-        repository: git@github.com:wolfv/rapyuta-demos.git
+        repository: https://github.com/wolfv/rapyuta-demos
         context_directory: ""
         branch: master
         docker_file_path: niryo/Dockerfile
         source_secret: github
         docker_pull_secret: dockerhub
         docker_push_secret: dockerhub
-        docker_image_repository: docker.io/wolfv/niryo_demo
+        docker_image_repository: docker.io/{{ docker_username }}/niryo_demo
         trigger: false
         trigger_name: latest
         tag_name: latest
 
     - name: Niryo Sim package
-      async: 1250
+      # async: 1250
       poll: 0
       rapyutarobotics.rr_io.packages:
         name: niryo_sim_package
         present: "{{ present }}"
-        type: 
+        type: docker
         version: auto
         build: latest
-        docker_image: niryo_docker_image
+        docker_image: "{{ docker_username }}/niryo_demo:latest"
         secret: dockerhub
         manifest_path: /tmp/niryo_sim_package.json
       register: package_creation_out
 
     - name: Niryo Sim Deployment
-      async: 2000
+      # async: 2000
       poll: 0
       rapyutarobotics.rr_io.deployments:
-        name: niryo_sim
-        component_name: niryo_sim_package
-        component_alias: niryo_sim_package
+        name: running_niryo_sim
+        component_name: niryo_sim
         present: "{{ present }}"
         package_name: niryo_sim_package
         networks:
           static_routes:
             - name: "{{ jlab_static_route }}"
               endpoint_name: jupyterlab
-          # is this a routed network?!
           native_networks:
             - name: native_network
-        # component_params:
-        #   VNC_PASSWORD: rapyuta
-        #   VNC_RESOLUTION: 1920x1080
-        #   DEBUG: true
-        #   RACK: true
-        #   WORLD: tatsumi
-        #   ITEM_SPAWN_FROM: AUTO
-        #   GWM_AUTH_TOKEN: autobootstrap
+        # we need to have some values here otherwise the 
+        # ansible script trips
+        component_params:
+          EMPTY: "parameter"

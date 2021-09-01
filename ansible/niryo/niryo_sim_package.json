@@ -1,6 +1,6 @@
 {
     "name": "niryo_sim_package",
-    "packageVersion": "v1.0.4",
+    "packageVersion": "v1.0.0",
     "description": "Niryo Web Backend for use with simulated robot",
     "bindable": true,
     "plans": [
@@ -10,7 +10,7 @@
             "singleton": false,
             "components": [
                 {
-                    "name": "Docker",
+                    "name": "niryo_sim",
                     "description": "",
                     "cloudInfra": {
                         "replicas": 1,
