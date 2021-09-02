@@ -38,7 +38,7 @@
     <param name="robot_description" command="$(arg urdf_file)" />
     <include file="$(find niryo_one_moveit_config)/launch/move_group.launch" />
 
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find niryo_one_description)/config/default_config.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d /content/niryo.rviz" />
 
     <param name="/niryo_one/python_api/service_timeout" value="10" />
     <param name="/niryo_one/python_api/action_connection_timeout" value="10" />
